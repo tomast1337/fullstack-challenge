@@ -28,6 +28,9 @@ export class EnvironmentVariables {
   @IsString()
   JWT_REFRESH_EXPIRES_IN: string;
 
+  @IsString()
+  COOKIE_EXPIRES_IN: string;
+
   // database
   @IsString()
   DATABASE_URL: string;
@@ -41,9 +44,6 @@ export class EnvironmentVariables {
   @IsString()
   @IsOptional()
   APP_DOMAIN: string = 'localhost';
-
-  @IsString()
-  RECAPTCHA_KEY: string;
 
   // s3
   @IsString()
@@ -64,11 +64,15 @@ export class EnvironmentVariables {
   @IsString()
   S3_REGION: string;
 
+  // mail
   @IsString()
-  COOKIE_EXPIRES_IN: string;
+  MAIL_TRANSPORT: string;
+
+  @IsString()
+  MAIL_FROM: string;
 }
 
-export function validate(config: Record<string, unknown>) {
+export const validate = (config: Record<string, unknown>) => {
   const validatedConfig = plainToInstance(EnvironmentVariables, config, {
     enableImplicitConversion: true,
   });
@@ -78,8 +82,10 @@ export function validate(config: Record<string, unknown>) {
   });
 
   if (errors.length > 0) {
-    throw new Error(errors.toString());
+    throw new Error(
+      errors.map((error) => Object.values(error.constraints)).join('\n\n'),
+    );
   }
 
   return validatedConfig;
-}
+};
