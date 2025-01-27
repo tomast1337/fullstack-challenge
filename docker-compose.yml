@@ -1,0 +1,60 @@
+services:
+  postgres:
+    container_name: fullstack-chalange-postgres
+    image: postgres:13
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fullstack-chalange
+
+  maildev:
+    container_name: fullstack-chalange-maildev
+    image: maildev/maildev
+    ports:
+      - '1080:1080' # Web Interface
+      - '1025:1025' # SMTP Server
+      # to use the maildev container, you need to set the following environment variables in your application:
+      # MAIL_TRANSPORT=smtp://maildev:1025 or MAIL_TRANSPORT=smtp://localhost:1025
+      # MAIL_FROM="Example <noreply@my-company.world>"
+      #
+      # You can also use the maildev web interface to view sent emails at http://localhost:1080
+
+  minio:
+    container_name: minio-server
+    image: minio/minio
+    command: server /data --console-address :9001
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - minio_data:/data
+    # You can access the MinIO web interface at http://localhost:9000
+    # You can access the MinIO console at http://localhost:9001
+
+  mc:
+    container_name: minio-client-setup
+    image: minio/mc
+    entrypoint: ['/bin/sh', '-c']
+    depends_on:
+      - minio
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: >
+      -c '
+      while ! mc alias set minio http://minio:9000 minioadmin minioadmin; do
+        echo "Waiting for MinIO to be available..."
+        sleep 2
+      done &&
+      mc mb minio/pictures &&
+      mc policy set public minio/pictures &&
+      '
+
+volumes:
+  mongodb_data:
+  minio_data:
