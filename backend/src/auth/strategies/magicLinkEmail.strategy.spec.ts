@@ -10,7 +10,6 @@ describe('MagicLinkEmailStrategy', () => {
   let strategy: MagicLinkEmailStrategy;
   let userService: UserService;
   let mailingService: MailingService;
-  let configService: ConfigService;
 
   const mockUserService = {
     findByEmail: jest.fn(),
@@ -50,7 +49,6 @@ describe('MagicLinkEmailStrategy', () => {
     strategy = module.get<MagicLinkEmailStrategy>(MagicLinkEmailStrategy);
     userService = module.get<UserService>(UserService);
     mailingService = module.get<MailingService>(MailingService);
-    configService = module.get<ConfigService>(ConfigService);
   });
 
   it('should be defined', () => {
@@ -83,7 +81,7 @@ describe('MagicLinkEmailStrategy', () => {
             'http://localhost/api/v1/auth/magic-link/callback?token=test_token',
           username: 'testuser',
         },
-        subject: 'Noteblock Magic Link',
+        subject: 'Magic Link',
         template: 'magic-link',
       });
     });
@@ -114,7 +112,7 @@ describe('MagicLinkEmailStrategy', () => {
             'http://localhost/api/v1/auth/magic-link/callback?token=test_token',
           username: 'testuser',
         },
-        subject: 'Welcome to Noteblock.world',
+        subject: 'Welcome',
         template: 'magic-link-new-account',
       });
     });

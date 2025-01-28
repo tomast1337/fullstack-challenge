@@ -66,7 +66,7 @@ export class MagicLinkEmailStrategy extends PassportStrategy(
             magicLink: magicLink,
             username: email.split('@')[0],
           },
-          subject: 'Welcome to Noteblock.world',
+          subject: 'Welcome',
           template: 'magic-link-new-account',
         });
       } else {
@@ -76,7 +76,7 @@ export class MagicLinkEmailStrategy extends PassportStrategy(
             magicLink: magicLink,
             username: user.name,
           },
-          subject: 'Noteblock Magic Link',
+          subject: 'Magic Link',
           template: 'magic-link',
         });
       }
@@ -87,10 +87,17 @@ export class MagicLinkEmailStrategy extends PassportStrategy(
       `Validating payload: ${JSON.stringify(payload)}`,
     );
 
-    const user = await this.userService.findByEmail(payload.destination);
+    const { destination } = payload;
+
+    let user;
+    try {
+      user = await this.userService.findByEmail(destination);
+    } catch (error) {
+      user = null;
+    }
 
     if (!user) {
-      return await this.userService.createWithEmail(payload.destination);
+      return await this.userService.createWithEmail(destination);
     }
 
     MagicLinkEmailStrategy.logger.debug(`User found: ${user.email}`);
