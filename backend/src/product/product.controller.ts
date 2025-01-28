@@ -1,34 +1,111 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  UseGuards,
+  HttpException,
+  HttpStatus,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { User } from '@prisma/client';
+import { GetRequestToken } from '@server/GetRequestUser';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { PagingDto } from '@server/dto/paging.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('product')
+@ApiTags('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Create a product',
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  create(
+    @GetRequestToken() user: User | null,
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createProductDto: CreateProductDto,
+  ) {
+    if (!user) {
+      throw new HttpException(
+        {
+          message: 'Unauthorized',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    return this.productService.create(createProductDto, user, file);
   }
 
   @Get()
-  findAll() {
-    return this.productService.findAll();
+  @ApiOperation({
+    summary: 'Get a page of products',
+  })
+  findAll(@Query() query: PagingDto) {
+    return this.productService.findAll(query);
   }
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'Find a product by ID',
+  })
   findOne(@Param('id') id: string) {
     return this.productService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: "Update a user's product by ID",
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  update(
+    @GetRequestToken() user: User | null,
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+    if (!user) {
+      throw new HttpException(
+        {
+          message: 'Unauthorized',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    return this.productService.update(+id, updateProductDto, user, file);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productService.remove(+id);
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Delete a user product by ID',
+  })
+  remove(@GetRequestToken() user: User | null, @Param('id') id: string) {
+    if (!user) {
+      throw new HttpException(
+        {
+          message: 'Unauthorized',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    return this.productService.remove(+id, user);
   }
 }
