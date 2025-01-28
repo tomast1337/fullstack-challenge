@@ -53,8 +53,12 @@ export class MagicLinkEmailStrategy extends PassportStrategy(
       mailingService: MailingService,
     ) =>
     async (email: string, magicLink: string) => {
-      const user = await userService.findByEmail(email);
-
+      let user;
+      try {
+        user = await userService.findByEmail(email);
+      } catch (error) {
+        user = null;
+      }
       if (!user) {
         mailingService.sendEmail({
           to: email,
