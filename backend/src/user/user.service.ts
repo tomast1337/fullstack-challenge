@@ -44,7 +44,7 @@ export class UserService {
     const user = await this.prismaService.user.create({
       data: {
         email: destination,
-        name: 'New User',
+        name: destination.split('@')[0],
         picture: 'https://example.com/picture.jpg',
       },
     });
