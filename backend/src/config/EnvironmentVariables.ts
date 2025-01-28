@@ -50,10 +50,7 @@ export class EnvironmentVariables {
   S3_ENDPOINT: string;
 
   @IsString()
-  S3_BUCKET_SONGS: string;
-
-  @IsString()
-  S3_BUCKET_THUMBS: string;
+  S3_PICTURE_BUCKET: string;
 
   @IsString()
   S3_KEY: string;
