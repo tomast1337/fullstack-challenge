@@ -1,6 +1,7 @@
 import * as path from 'path';
 
 import {
+  DeleteObjectCommand,
   HeadBucketCommand,
   ObjectCannedACL,
   PutObjectCommand,
@@ -125,6 +126,24 @@ export class FileService {
 
     return this.getImageUrl(fileName);
   }
+
+  public async deleteImage(pictureUrl: string) {
+    const bucket = this.S3_PICTURE_BUCKET;
+    const fileName = pictureUrl.split('/').pop();
+
+    const params = {
+      Bucket: bucket,
+      Key: fileName,
+    };
+
+    try {
+      await this.s3Client.send(new DeleteObjectCommand(params));
+    } catch (error) {
+      this.logger.error('Error deleting file: ', error);
+      throw error;
+    }
+  }
+
   public async getImageUrl(fileName: string) {
     const bucket = this.S3_PICTURE_BUCKET;
     const url = this.getPublicFileUrl(fileName, bucket);
