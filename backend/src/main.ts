@@ -42,9 +42,9 @@ const bootstrap = async () => {
 
   const port = process.env.PORT || '4000';
 
-  logger.log('Listening on port ' + port);
-
   await app.listen(port);
+
+  return port;
 };
 
 bootstrap()
