@@ -27,8 +27,6 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  @UseGuards(AuthGuard('jwt-refresh'))
-  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get a page of users',
   })
@@ -37,8 +35,6 @@ export class UserController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt-refresh'))
-  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Find a user by ID',
   })
