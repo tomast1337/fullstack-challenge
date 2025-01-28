@@ -52,7 +52,7 @@ services:
         sleep 2
       done &&
       mc mb minio/pictures &&
-      mc policy set public minio/pictures &&
+      mc policy set public minio/pictures
       '
 
 volumes:
