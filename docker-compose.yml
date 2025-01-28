@@ -1,16 +1,30 @@
 services:
+  # Database
   postgres:
-    container_name: fullstack-chalange-postgres
+    container_name: fullstack-challenge-postgres
     image: postgres:13
     ports:
       - '5432:5432'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: fullstack-chalange
+      POSTGRES_DB: fullstack-challenge
+
+  # Database admin
+  pgadmin:
+    container_name: fullstack-challenge-pgadmin8080
+    image: dpage/pgadmin4
+    ports:
+      - '5050:80'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+  # You can access the pgAdmin web interface at http://localhost:5050
 
   maildev:
-    container_name: fullstack-chalange-maildev
+    container_name: fullstack-challenge-maildev
     image: maildev/maildev
     ports:
       - '1080:1080' # Web Interface
@@ -58,3 +72,4 @@ services:
 volumes:
   mongodb_data:
   minio_data:
+  pgadmin_data:
