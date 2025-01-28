@@ -1,11 +1,12 @@
 import { Controller, Inject, Post, Req, Res } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { MagicLinkEmailStrategy } from './strategies/magicLinkEmail.strategy';
 
 @Controller('auth')
+@ApiTags('auth')
 export class AuthController {
   constructor(
     @Inject(AuthService)
