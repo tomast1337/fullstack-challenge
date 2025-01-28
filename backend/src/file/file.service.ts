@@ -107,11 +107,11 @@ export class FileService {
     }
   }
 
-  public async uploadImage(buffer: Buffer, publicId: string) {
+  public async uploadImage(buffer: Buffer, id: string) {
     const bucket = this.S3_PICTURE_BUCKET;
 
     const fileName =
-      'images/' + path.parse(publicId).name.replace(/\s/g, '') + '.png';
+      'images/' + path.parse(id).name.replace(/\s/g, '') + '.png';
 
     const mimetype = 'image/jpeg';
 
