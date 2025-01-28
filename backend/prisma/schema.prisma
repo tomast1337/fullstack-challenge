@@ -30,6 +30,7 @@ model Product {
     category      String
     description   String
     price         Float
+    picture       String
     stockQuantity Int
     userId        Int // Owner of the product
     user          User        @relation(fields: [userId], references: [id])
