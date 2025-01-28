@@ -30,18 +30,6 @@ export class MailingService {
         subject,
         template: `${template}`, // The template file name (without extension)
         context, // The context to be passed to the template
-        attachments: [
-          {
-            filename: 'background-image.png',
-            cid: 'background-image',
-            path: `${__dirname}/templates/img/background-image.png`,
-          },
-          {
-            filename: 'logo.png',
-            cid: 'logo',
-            path: `${__dirname}/templates/img/logo.png`,
-          },
-        ],
       });
 
       this.logger.debug(`Email sent to ${to}`);
