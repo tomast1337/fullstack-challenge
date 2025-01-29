@@ -88,7 +88,7 @@ export class ProductService {
       take: limit,
       skip: (page - 1) * limit,
       orderBy: {
-        [sort]: order,
+        [sort]: order ? 'asc' : 'desc',
       },
     });
     const total = await this.prismaService.product.count({
@@ -193,5 +193,15 @@ export class ProductService {
     await this.fileService.deleteImage(product.picture);
 
     return ProductDto.fromEntity(product);
+  }
+
+  public async findRandomSample(limit: number) {
+    const total = await this.prismaService.product.count();
+    const random = Math.floor(Math.random() * (total - limit));
+    const products = await this.prismaService.product.findMany({
+      take: limit,
+      skip: random,
+    });
+    return products.map(ProductDto.fromEntity);
   }
 }

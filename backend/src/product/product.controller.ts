@@ -61,6 +61,14 @@ export class ProductController {
     return this.productService.findAll(query);
   }
 
+  @Get('sample')
+  @ApiOperation({
+    summary: 'Get a sample of 10 random products',
+  })
+  findRandom() {
+    return this.productService.findRandomSample(10);
+  }
+
   @Get(':id')
   @ApiOperation({
     summary: 'Find a product by ID',
