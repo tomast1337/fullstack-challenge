@@ -22,6 +22,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PagingDto } from '@server/dto/paging.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { PageDto } from '@server/dto/page.dto';
+import { ProductDto } from './dto/product.dto';
 
 @Controller('product')
 @ApiTags('product')
@@ -55,7 +57,7 @@ export class ProductController {
   @ApiOperation({
     summary: 'Get a page of products',
   })
-  findAll(@Query() query: PagingDto) {
+  findAll(@Query() query: PagingDto): Promise<PageDto<ProductDto>> {
     return this.productService.findAll(query);
   }
 

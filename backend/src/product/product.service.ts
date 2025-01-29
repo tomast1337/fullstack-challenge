@@ -5,6 +5,8 @@ import { FileService } from '@server/file/file.service';
 import { PrismaService } from '@server/prisma/prisma.service';
 import { PagingDto } from '@server/dto/paging.dto';
 import { User } from '@prisma/client';
+import { PageDto } from '@server/dto/page.dto';
+import { ProductDto } from './dto/product.dto';
 
 @Injectable()
 export class ProductService {
@@ -49,7 +51,7 @@ export class ProductService {
           picture: image,
         },
       });
-      return product;
+      return ProductDto.fromEntity(product);
     } catch (error) {
       await this.prismaService.product.delete({
         where: {
@@ -65,7 +67,13 @@ export class ProductService {
     }
   }
 
-  public async findAll({ limit, order, page, query, sort }: PagingDto) {
+  public async findAll({
+    limit,
+    order,
+    page,
+    query,
+    sort,
+  }: PagingDto): Promise<PageDto<ProductDto>> {
     const products = await this.prismaService.product.findMany({
       where: {
         name: {
@@ -78,7 +86,19 @@ export class ProductService {
         [sort]: order,
       },
     });
-    return products;
+    const total = await this.prismaService.product.count({
+      where: {
+        name: {
+          contains: query,
+        },
+      },
+    });
+    return {
+      data: products.map(ProductDto.fromEntity),
+      limit,
+      page,
+      total,
+    };
   }
 
   public async findOne(id: number) {
@@ -88,7 +108,7 @@ export class ProductService {
       },
     });
 
-    return product;
+    return ProductDto.fromEntity(product);
   }
 
   public async update(
@@ -139,7 +159,7 @@ export class ProductService {
       updated.picture = image;
     }
 
-    return updated;
+    return ProductDto.fromEntity(updated);
   }
 
   public async remove(id: number, user: User) {
@@ -167,8 +187,6 @@ export class ProductService {
     // delete image
     await this.fileService.deleteImage(product.picture);
 
-    return {
-      message: 'Product deleted',
-    };
+    return ProductDto.fromEntity(product);
   }
 }
