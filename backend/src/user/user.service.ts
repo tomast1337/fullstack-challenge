@@ -5,6 +5,8 @@ import { PrismaService } from '@server/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileService } from '@server/file/file.service';
+import { PageDto } from '@server/dto/page.dto';
+import { UserDto } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -21,7 +23,13 @@ export class UserService {
     });
   }
 
-  public async findPage({ page, limit, query, sort, order }: PagingDto) {
+  public async findPage({
+    page,
+    limit,
+    query,
+    sort,
+    order,
+  }: PagingDto): Promise<PageDto<User>> {
     const users = await this.prismaService.user.findMany({
       skip: (page - 1) * limit,
       take: limit,
@@ -34,16 +42,30 @@ export class UserService {
         [sort]: order ? 'asc' : 'desc',
       },
     });
-    return users;
+
+    const total: number = await this.prismaService.user.count({
+      where: {
+        name: {
+          contains: query,
+        },
+      },
+    });
+
+    return {
+      data: users.map(UserDto.fromEntity),
+      total,
+      page,
+      limit,
+    };
   }
 
-  public async findOne(id: number): Promise<User> {
+  public async findOne(id: number): Promise<UserDto> {
     const user = await this.prismaService.user.findUnique({
       where: {
         id,
       },
     });
-    return user;
+    return UserDto.fromEntity(user);
   }
 
   public async findByEmail(email: string) {
@@ -52,7 +74,7 @@ export class UserService {
         email,
       },
     });
-    return user;
+    return UserDto.fromEntity(user);
   }
 
   public async update(id: number, updateUserDto: UpdateUserDto) {
@@ -62,7 +84,7 @@ export class UserService {
       },
       data: updateUserDto,
     });
-    return updatedUser;
+    return UserDto.fromEntity(updatedUser);
   }
 
   public async updatePicture(id: number, file: Express.Multer.File) {
@@ -123,6 +145,6 @@ export class UserService {
         id,
       },
     });
-    return deletedUser;
+    return UserDto.fromEntity(deletedUser);
   }
 }

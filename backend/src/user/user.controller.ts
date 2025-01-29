@@ -20,6 +20,7 @@ import { UserService } from './user.service';
 import { User } from '@prisma/client';
 import { GetRequestToken } from '@server/GetRequestUser';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { PageDto } from '@server/dto/page.dto';
 
 @Controller('user')
 @ApiTags('user')
@@ -30,7 +31,7 @@ export class UserController {
   @ApiOperation({
     summary: 'Get a page of users',
   })
-  findAll(@Query() query: PagingDto) {
+  findAll(@Query() query: PagingDto): Promise<PageDto<User>> {
     return this.userService.findPage(query);
   }
 
@@ -38,7 +39,7 @@ export class UserController {
   @ApiOperation({
     summary: 'Find a user by ID',
   })
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<User> {
     return this.userService.findOne(+id);
   }
 
@@ -52,7 +53,7 @@ export class UserController {
     @GetRequestToken() user: User | null,
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
-  ) {
+  ): Promise<User> {
     if (+id !== user.id) {
       throw new HttpException(
         {
@@ -74,7 +75,7 @@ export class UserController {
   updatePicture(
     @GetRequestToken() user: User | null,
     @UploadedFile() file: Express.Multer.File,
-  ) {
+  ): Promise<User> {
     return this.userService.updatePicture(user.id, file);
   }
 
@@ -84,7 +85,10 @@ export class UserController {
   @ApiOperation({
     summary: 'Remove a user by ID',
   })
-  remove(@GetRequestToken() user: User | null, @Param('id') id: string) {
+  remove(
+    @GetRequestToken() user: User | null,
+    @Param('id') id: string,
+  ): Promise<User> {
     if (+id !== user.id) {
       throw new HttpException(
         {
