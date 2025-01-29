@@ -1,5 +1,7 @@
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import Link from 'next/link';
-import { Button } from '../ui/button';
+import { LoginForm } from '../LoginForm';
+import { UserInfo } from '../UserInfo';
 import {
   Sidebar,
   SidebarContent,
@@ -7,12 +9,9 @@ import {
   SidebarGroup,
   SidebarHeader,
 } from '../ui/sidebar';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import HomeIcon from '@mui/icons-material/Home';
-import { LoginForm } from '../LoginForm';
-import { UserInfo } from '../UserInfo';
-import { SearchProducts } from '../SearchProducts';
+
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import { SearchProducts } from '../product/SearchProducts';
 interface HeaderProps {
   isLogin?: boolean;
 }
