@@ -3,11 +3,11 @@ import { env } from 'node:process';
 import { DynamicModule, Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-import { SongModule } from '@server/song/song.module';
 import { UserModule } from '@server/user/user.module';
 
 import { SeedController } from './seed.controller';
 import { SeedService } from './seed.service';
+import { ProductModule } from '@server/product/product.module';
 
 @Module({})
 export class SeedModule {
@@ -22,7 +22,7 @@ export class SeedModule {
       SeedModule.logger.warn('Seeding is allowed in development mode');
       return {
         module: SeedModule,
-        imports: [UserModule, SongModule, ConfigModule.forRoot()],
+        imports: [UserModule, ProductModule, ConfigModule.forRoot()],
         providers: [
           ConfigService,
           SeedService,
