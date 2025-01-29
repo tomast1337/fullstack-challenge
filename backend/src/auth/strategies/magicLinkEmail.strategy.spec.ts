@@ -62,7 +62,7 @@ describe('MagicLinkEmailStrategy', () => {
       const magicLink =
         'http://localhost/api/v1/auth/magic-link/callback?token=test_token';
 
-      const user = { username: 'testuser', email };
+      const user = { name: 'testuser', email };
 
       mockUserService.findByEmail.mockResolvedValue(user);
 
