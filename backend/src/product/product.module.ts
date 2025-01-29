@@ -8,5 +8,6 @@ import { PrismaModule } from '@server/prisma/prisma.module';
   imports: [FileModule.forRootAsync(), PrismaModule],
   controllers: [ProductController],
   providers: [ProductService],
+  exports: [ProductService],
 })
 export class ProductModule {}
