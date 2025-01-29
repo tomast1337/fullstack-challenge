@@ -15,6 +15,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { validate } from './config/EnvironmentVariables';
 import { FileModule } from './file/file.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { FileModule } from './file/file.module';
         limit: 256, // 256 requests per minute
       },
     ]),
+    SeedModule.forRoot(),
     FileModule.forRootAsync(),
     UserModule,
     ProductModule,

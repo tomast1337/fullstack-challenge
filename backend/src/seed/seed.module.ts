@@ -5,9 +5,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { UserModule } from '@server/user/user.module';
 
+import { PrismaService } from '@server/prisma/prisma.service';
+import { ProductModule } from '@server/product/product.module';
 import { SeedController } from './seed.controller';
 import { SeedService } from './seed.service';
-import { ProductModule } from '@server/product/product.module';
 
 @Module({})
 export class SeedModule {
@@ -26,6 +27,10 @@ export class SeedModule {
         providers: [
           ConfigService,
           SeedService,
+          {
+            provide: PrismaService,
+            useClass: PrismaService,
+          },
           {
             provide: 'NODE_ENV',
             useFactory: (configService: ConfigService) =>

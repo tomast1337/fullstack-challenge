@@ -8,12 +8,35 @@ import { SeedService } from './seed.service';
 export class SeedController {
   constructor(private readonly seedService: SeedService) {}
 
-  @Get('seed-dev')
+  @Get('seed-users')
   @ApiOperation({
-    summary: 'Seed the database with development data',
+    summary: 'Adds 64 users to the database',
   })
   async seed() {
     this.seedService.seedDev();
+    return {
+      message: 'Seeding in progress',
+    };
+  }
+
+  @Get('seed-products')
+  @ApiOperation({
+    summary: 'Add 256 products to the database with random users',
+  })
+  async seedProducts() {
+    this.seedService.seedProducs();
+    return {
+      message: 'Seeding in progress',
+    };
+  }
+
+  @Get('seed-orders')
+  @ApiOperation({
+    summary:
+      'Add 128 orders to the database with random users and random on stock products',
+  })
+  async seedOrders() {
+    this.seedService.seedOrders();
     return {
       message: 'Seeding in progress',
     };

@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FileService } from '@server/file/file.service';
@@ -10,6 +16,7 @@ import { ProductDto } from './dto/product.dto';
 
 @Injectable()
 export class ProductService {
+  private readonly logger = new Logger(ProductService.name);
   constructor(
     @Inject(PrismaService)
     private readonly prismaService: PrismaService,
@@ -22,6 +29,8 @@ export class ProductService {
     { id }: User,
     picture: Express.Multer.File,
   ) {
+    this.logger.debug(`Creating product ${name} by user ${id}`);
+
     const product = await this.prismaService.product.create({
       data: {
         name,
@@ -29,12 +38,8 @@ export class ProductService {
         description,
         price,
         stockQuantity,
-        picture: '/default.jpg',
-        user: {
-          connect: {
-            id,
-          },
-        },
+        picture: '/not-found.png',
+        userId: id,
       },
     });
 
