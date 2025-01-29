@@ -1,12 +1,13 @@
 {
-  "name": "desafio-fullstack",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+    "name": "desafio-fullstack",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev:web": "pnpm run --filter ./frontend dev",
+        "dev:server": "pnpm run --filter ./backend start:dev"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
 }
