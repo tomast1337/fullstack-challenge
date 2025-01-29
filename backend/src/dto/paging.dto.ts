@@ -26,6 +26,7 @@ export class PagingDto {
     default: '',
     example: '',
     description: 'The search query',
+    required: false,
   })
   query: string;
 
