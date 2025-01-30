@@ -1,12 +1,5 @@
-export default async function Page({
-  query,
-}: {
-  query: Promise<{ id: string }>;
-}) {
-  const id = (await query).id;
-  return (
-    <div>
-      Product <search></search>: {id}
-    </div>
-  );
+import { ProductSearchList } from '@frontend/components/product/ProductSearchList';
+
+export default async function Page() {
+  return <ProductSearchList />;
 }
