@@ -2,6 +2,7 @@
 import { Avatar } from '@frontend/components/ui/avatar';
 import { Button } from '@frontend/components/ui/button';
 import { useAuth } from '@frontend/hooks/use-auth';
+import { useOrder } from '@frontend/hooks/use-order';
 import { logout } from '@frontend/lib/axios/token.utils';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -17,6 +18,12 @@ export const UserInfo = () => {
       name: state.name,
       email: state.email,
       picture: state.picture,
+    })),
+  );
+
+  const { order } = useOrder(
+    useShallow((state) => ({
+      ...state,
     })),
   );
 
@@ -37,6 +44,15 @@ export const UserInfo = () => {
         >
           <ShoppingCartIcon className='w-5 h-5' />
           Cart
+          {order && order.orderItems.length > 0 ? (
+            <span className='bg-red-500 text-white rounded-full px-2 py-1 text-xs'>
+              {order.orderItems.length}
+            </span>
+          ) : (
+            <span className='bg-gray-500 text-white rounded-full px-2 py-1 text-xs'>
+              0
+            </span>
+          )}
         </Button>
       </div>
       <div className='flex items-center gap-4'>
