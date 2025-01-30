@@ -15,6 +15,7 @@ import {
 } from '../ui/select';
 import { useState } from 'react';
 import { useToast } from '@frontend/hooks/use-toast';
+import { Label } from '../ui/label';
 
 export const ProductDetail = ({ product }: { product: ProductDto }) => {
   const { addToOrder } = useOrder(useShallow((state) => ({ ...state })));
@@ -64,10 +65,11 @@ export const ProductDetail = ({ product }: { product: ProductDto }) => {
           <p className='text-2xl font-semibold'>${product.price.toFixed(2)}</p>
           {product.stockQuantity > 0 ? (
             <>
+              <Label>Set the quantity:</Label>
               <Select>
                 {/* Select Trigger */}
                 <SelectTrigger className='w-[180px]'>
-                  <SelectValue placeholder='Quantity' />
+                  <SelectValue placeholder='1' />
                 </SelectTrigger>
                 <SelectContent>
                   {/* Select Items */}
