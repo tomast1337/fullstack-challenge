@@ -66,20 +66,14 @@ export const ProductDetail = ({ product }: { product: ProductDto }) => {
           {product.stockQuantity > 0 ? (
             <>
               <Label>Set the quantity:</Label>
-              <Select>
-                {/* Select Trigger */}
+              <Select onValueChange={(value) => setQuantity(Number(value))}>
                 <SelectTrigger className='w-[180px]'>
                   <SelectValue placeholder='1' />
                 </SelectTrigger>
                 <SelectContent>
-                  {/* Select Items */}
                   {Array.from({ length: product.stockQuantity }).map(
                     (_, index) => (
-                      <SelectItem
-                        onClick={() => setQuantity(index + 1)}
-                        key={index}
-                        value={String(index + 1)}
-                      >
+                      <SelectItem key={index} value={String(index + 1)}>
                         {index + 1}
                       </SelectItem>
                     ),

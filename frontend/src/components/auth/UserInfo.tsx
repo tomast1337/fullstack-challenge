@@ -4,6 +4,8 @@ import { Button } from '@frontend/components/ui/button';
 import { useAuth } from '@frontend/hooks/use-auth';
 import { useOrder } from '@frontend/hooks/use-order';
 import { logout } from '@frontend/lib/axios/token.utils';
+import Inventory2Icon from '@mui/icons-material/Inventory2';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
@@ -43,7 +45,7 @@ export const UserInfo = () => {
           className='bg-blue-600 hover:bg-blue-500 transition rounded-lg w-full'
         >
           <ShoppingCartIcon className='w-5 h-5' />
-          Cart
+          My Cart
           {order && order.orderItems.length > 0 ? (
             <span className='bg-red-500 text-white rounded-full px-2 py-1 text-xs'>
               {order.orderItems.length}
@@ -55,6 +57,25 @@ export const UserInfo = () => {
           )}
         </Button>
       </div>
+      <div className='flex items-center gap-4 w-full mb-6'>
+        <Button
+          onClick={() => router.push('/my-orders')}
+          className='bg-blue-600 hover:bg-blue-500 transition rounded-lg w-full'
+        >
+          <LocalShippingIcon className='w-5 h-5' />
+          My Orders
+        </Button>
+      </div>
+      <div className='flex items-center gap-4 w-full mb-6'>
+        <Button
+          onClick={() => router.push('/my-products')}
+          className='bg-blue-600 hover:bg-blue-500 transition rounded-lg w-full'
+        >
+          <Inventory2Icon className='w-5 h-5' />
+          My Products
+        </Button>
+      </div>
+
       <div className='flex items-center gap-4'>
         <Avatar>
           <AvatarImage src={picture} />

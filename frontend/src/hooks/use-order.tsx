@@ -1,6 +1,5 @@
-import ClientAxios from '@frontend/lib/axios/clientAxios';
-import { PagingDto } from '@backend/dto/paging.dto';
 import { OrderDto } from '@backend/orders/dto/order.dto';
+import ClientAxios from '@frontend/lib/axios/clientAxios';
 import { create } from 'zustand';
 
 const fetchCurrentOrder = async () => {
@@ -27,16 +26,8 @@ const fetchRemoveFromOrder = async (productId: number) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const fetchMyOrders = async ({
-  limit,
-  order,
-  page,
-  query,
-  sort,
-}: PagingDto) => {
-  const response = await ClientAxios.get('/orders', {
-    params: { limit, order, page, query, sort },
-  });
+const fetchMyOrders = async () => {
+  const response = await ClientAxios.get<OrderDto[]>('/orders');
   return response.data;
 };
 
@@ -47,12 +38,16 @@ const fetchOrderById = async (id: string) => {
 };
 
 type UseOrders = {
+  // Current order
   fetchOrder: VoidFunction;
   completeOrder: VoidFunction;
   cancelOrder: VoidFunction;
   addToOrder: (productId: number, quantity: number) => Promise<void>;
   removeFormOrder: (productId: number) => Promise<void>;
   order: OrderDto | null;
+  // Old orders
+  oldOrders: OrderDto[] | null;
+  retrieveOldOrders: VoidFunction;
 };
 
 export const useOrder = create<UseOrders>((set) => {
@@ -79,6 +74,11 @@ export const useOrder = create<UseOrders>((set) => {
     await fetchOrder();
   };
 
+  const fetchOldOrders = async () => {
+    const oldOrders = await fetchMyOrders();
+    set({ oldOrders });
+  };
+
   return {
     fetchOrder,
     completeOrder,
@@ -86,5 +86,8 @@ export const useOrder = create<UseOrders>((set) => {
     addToOrder,
     removeFormOrder,
     order: null,
+
+    oldOrders: null,
+    retrieveOldOrders: fetchOldOrders,
   };
 });
