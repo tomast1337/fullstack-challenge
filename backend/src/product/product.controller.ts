@@ -1,29 +1,29 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  Query,
-  UseGuards,
+  Get,
   HttpException,
   HttpStatus,
-  UseInterceptors,
+  Param,
+  Patch,
+  Post,
+  Query,
   UploadedFile,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ProductService } from './product.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { GetRequestToken } from '@server/GetRequestUser';
-import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { PagingDto } from '@server/dto/paging.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { PageDto } from '@server/dto/page.dto';
+import { PagingDto } from '@server/dto/paging.dto';
+import { CreateProductDto } from './dto/create-product.dto';
 import { ProductDto } from './dto/product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductService } from './product.service';
 
 @Controller('product')
 @ApiTags('product')
@@ -67,6 +67,22 @@ export class ProductController {
   })
   findRandom() {
     return this.productService.findRandomSample(10);
+  }
+
+  @Get('my')
+  @ApiOperation({
+    summary: 'Get all products of the user',
+  })
+  findMyProducts(@GetRequestToken() user: User | null): Promise<ProductDto[]> {
+    if (!user) {
+      throw new HttpException(
+        {
+          message: 'Unauthorized',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    return this.productService.findMyProducts(user);
   }
 
   @Get(':id')

@@ -5,14 +5,14 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { FileService } from '@server/file/file.service';
-import { PrismaService } from '@server/prisma/prisma.service';
-import { PagingDto } from '@server/dto/paging.dto';
 import { User } from '@prisma/client';
 import { PageDto } from '@server/dto/page.dto';
+import { PagingDto } from '@server/dto/paging.dto';
+import { FileService } from '@server/file/file.service';
+import { PrismaService } from '@server/prisma/prisma.service';
+import { CreateProductDto } from './dto/create-product.dto';
 import { ProductDto } from './dto/product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -106,6 +106,16 @@ export class ProductService {
       page,
       total,
     };
+  }
+
+  public async findMyProducts(user: User): Promise<ProductDto[]> {
+    const { id } = user;
+    const products = await this.prismaService.product.findMany({
+      where: {
+        userId: id,
+      },
+    });
+    return products.map(ProductDto.fromEntity);
   }
 
   public async findOne(id: number) {
