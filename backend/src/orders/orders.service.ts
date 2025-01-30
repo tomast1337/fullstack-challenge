@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { User } from '@prisma/client';
@@ -9,6 +15,7 @@ import { OrderDto } from './dto/order.dto';
 
 @Injectable()
 export class OrdersService {
+  private readonly logger = new Logger(OrdersService.name);
   constructor(
     @Inject(PrismaService)
     private prismaService: PrismaService,
@@ -162,7 +169,7 @@ export class OrdersService {
     { id: productId, quantity }: AddToOrderDto,
     user: User,
   ) {
-    const order = await this.prismaService.order.findFirst({
+    let order = await this.prismaService.order.findFirst({
       where: {
         userId: user.id,
         status: 'PENDING',
@@ -170,13 +177,25 @@ export class OrdersService {
     });
 
     if (!order) {
-      throw new HttpException(
+      this.logger.error(`Order not found for user: ${user.id}, creating one`);
+      this.createNew(
         {
-          message: 'Order not found',
+          orderItems: [],
+          status: 'PENDING',
         },
-        HttpStatus.NOT_FOUND,
+        user,
       );
+      order = await this.prismaService.order.findFirst({
+        where: {
+          userId: user.id,
+          status: 'PENDING',
+        },
+      });
     }
+
+    this.logger.log(
+      `Adding product to order: ${productId}, quantity: ${quantity}, to order: ${order.id}`,
+    );
 
     // verify if the product exists
 
@@ -187,6 +206,7 @@ export class OrdersService {
     });
 
     if (!product) {
+      this.logger.error(`Product not found: ${productId}`);
       throw new HttpException(
         {
           message: 'Product not found',
@@ -197,6 +217,9 @@ export class OrdersService {
 
     // verify if the there is enough stock
     if (product.stockQuantity < quantity) {
+      this.logger.error(
+        `Not enough stock for product: ${productId}, quantity: ${quantity}`,
+      );
       throw new HttpException(
         {
           message: 'Not enough stock',
