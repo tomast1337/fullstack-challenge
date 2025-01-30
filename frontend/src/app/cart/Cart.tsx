@@ -88,22 +88,41 @@ export const Cart = () => {
     }
   };
 
+  const getOrderTotalPrice = () => {
+    if (!order) {
+      return 0;
+    }
+    return order.orderItems.reduce(
+      (acc, { price, quantity }) => acc + price * quantity,
+      0,
+    );
+  };
+
+  const getOrderTotalQuantity = () => {
+    if (!order) {
+      return 0;
+    }
+    return order.orderItems.reduce((acc, { quantity }) => acc + quantity, 0);
+  };
+
   return (
-    <section className='container mx-auto p-4 min-h-screen flex flex-col items-center w-full'>
+    <section className='container mx-auto p-4 w-[900px]'>
       <h1 className='text-2xl font-bold mb-4'>Cart</h1>
       {order && (
-        <div className='w-full flex justify-center flex-col items-center'>
+        <div className='flex justify-center items-center flex-col w-full'>
           <div className='overflow-x-auto max-w-[600px] w-full'>
-            <Table>
+            <Table className='min-w-full'>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Individual price</TableHead>
-                  <TableHead>Quantity</TableHead>
-                  <TableHead>Total price</TableHead>
-                  <TableHead>
-                    <DeleteIcon />
+                  <TableHead className='py-2 px-4 border-b'>Name</TableHead>
+                  <TableHead className='py-2 px-4 border-b'>
+                    Individual price
                   </TableHead>
+                  <TableHead className='py-2 px-4 border-b'>Quantity</TableHead>
+                  <TableHead className='py-2 px-4 border-b'>
+                    Total price
+                  </TableHead>
+                  <TableHead className='py-2 px-4 border-b'>Remove</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -130,19 +149,60 @@ export const Cart = () => {
                     </TableRow>
                   ),
                 )}
-                {
-                  // if length of orderItems is 0 show empty cart with 20 rows
-                  order.orderItems.length === 0 &&
-                    Array.from({ length: 20 }).map((_, index) => (
+                {order.orderItems.length < 20 &&
+                  order.orderItems.length > 0 &&
+                  Array.from({ length: 20 - order.orderItems.length }).map(
+                    (_, index) => (
                       <TableRow key={index}>
-                        <TableCell />
-                        <TableCell />
-                        <TableCell />
-                        <TableCell />
-                        <TableCell />
+                        <TableCell>
+                          <span className='block w-8' />
+                        </TableCell>
+                        <TableCell>
+                          <span className='w-6' />
+                        </TableCell>
+                        <TableCell>
+                          <span className='w-6' />
+                        </TableCell>
+                        <TableCell>
+                          <span className='w-6' />
+                        </TableCell>
+                        <TableCell>
+                          <span className='w-6' />
+                        </TableCell>
                       </TableRow>
-                    ))
-                }
+                    ),
+                  )}
+                {order.orderItems.length === 0 &&
+                  Array.from({ length: 20 }).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell>
+                        <span className='block w-8' />
+                      </TableCell>
+                      <TableCell>
+                        <span className='w-6' />
+                      </TableCell>
+                      <TableCell>
+                        <span className='w-6' />
+                      </TableCell>
+                      <TableCell>
+                        <span className='w-6' />
+                      </TableCell>
+                      <TableCell>
+                        <span className='w-6' />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                <TableRow>
+                  <TableCell className='py-2 px-4 border-b'>Total</TableCell>
+                  <TableCell className='py-2 px-4 border-b' />
+                  <TableCell className='py-2 px-4 border-b'>
+                    {getOrderTotalQuantity()}
+                  </TableCell>
+                  <TableCell className='py-2 px-4 border-b'>
+                    {`$ ${getOrderTotalPrice().toFixed(2)}`}
+                  </TableCell>
+                  <TableCell className='py-2 px-4 border-b' />
+                </TableRow>
               </TableBody>
             </Table>
           </div>

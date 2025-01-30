@@ -36,7 +36,7 @@ export default function RootLayout({
         <Toaster />
         <SidebarProvider>
           <AppSidebar />
-          <main>
+          <main className='flex flex-col overflow-hidden align-middle'>
             <SidebarTrigger />
             {children}
           </main>
