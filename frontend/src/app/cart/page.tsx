@@ -1,5 +1,5 @@
-import { ProductSearchList } from '@frontend/components/product/ProductSearchList';
+import { Cart } from './Cart';
 
 export default async function Page() {
-  return <ProductSearchList />;
+  return <Cart />;
 }

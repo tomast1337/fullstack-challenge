@@ -1,11 +1,13 @@
 'use client';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { ProductDto } from '@backend/product/dto/product.dto';
 import { Button } from '@frontend/components/ui/button';
-import Image from 'next/image';
-import { ProductSugesstion } from './ProductSugesstion';
 import { useOrder } from '@frontend/hooks/use-order';
+import { useToast } from '@frontend/hooks/use-toast';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import Image from 'next/image';
+import { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+import { Label } from '../ui/label';
 import {
   Select,
   SelectContent,
@@ -13,9 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { useState } from 'react';
-import { useToast } from '@frontend/hooks/use-toast';
-import { Label } from '../ui/label';
+import { ProductSugesstion } from './ProductSugesstion';
 
 export const ProductDetail = ({ product }: { product: ProductDto }) => {
   const { addToOrder } = useOrder(useShallow((state) => ({ ...state })));
