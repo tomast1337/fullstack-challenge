@@ -2,16 +2,8 @@
 import { UseProducts, useProducts } from '@frontend/hooks/use-products';
 import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@frontend/components/ui/pagination';
-import { LoadingProducts, ProductCard } from './LoadingProducts';
+import { LoadingProducts, ProductCard } from './ProductCard';
+import { ProductPagination } from './ProductPagination';
 
 export const MainProducts = () => {
   const {
@@ -43,22 +35,12 @@ export const MainProducts = () => {
       )}
       {/* Pagination Component */}
       {total > pageSize && (
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href='#' />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href='#'>1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href='#' />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <ProductPagination
+          current={page}
+          limit={pageSize}
+          total={total}
+          query=''
+        />
       )}
     </section>
   );

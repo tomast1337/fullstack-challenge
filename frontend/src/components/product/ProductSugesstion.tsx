@@ -8,7 +8,7 @@ import {
 } from '@frontend/components/ui/carousel';
 import { useEffect, useState } from 'react';
 import { fetchProductSample } from '@frontend/hooks/use-products';
-import { ProductCard, ProductCardSkeleton } from './LoadingProducts';
+import { ProductCard, ProductCardSkeleton } from './ProductCard';
 
 export const ProductSugesstion = () => {
   const [products, setProducts] = useState<ProductDto[]>([]);
