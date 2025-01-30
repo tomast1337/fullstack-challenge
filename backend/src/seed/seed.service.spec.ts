@@ -4,6 +4,7 @@ import { UserService } from '@server/user/user.service';
 
 import { ProductService } from '@server/product/product.service';
 import { SeedService } from './seed.service';
+import { PrismaService } from '@server/prisma/prisma.service';
 
 describe('SeedService', () => {
   let service: SeedService;
@@ -18,16 +19,15 @@ describe('SeedService', () => {
         },
         {
           provide: UserService,
-          useValue: {
-            create: jest.fn(),
-          },
+          useValue: {},
         },
         {
           provide: ProductService,
-          useValue: {
-            uploadSong: jest.fn(),
-            getSongById: jest.fn(),
-          },
+          useValue: {},
+        },
+        {
+          provide: PrismaService,
+          useValue: {},
         },
       ],
     }).compile();
