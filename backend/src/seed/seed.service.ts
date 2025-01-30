@@ -55,16 +55,21 @@ export class SeedService {
   }
 
   public async seedProducs() {
+    this.logger.debug('Starting product seeding process');
+
     const users = await this.prismaService.user.findMany();
+    this.logger.debug(`Fetched ${users.length} users`);
+
     const sampleSize = 64; // Define the sample size
     const sampleUsers = this.getRandomSample(users, sampleSize);
+    this.logger.debug(`Selected ${sampleSize} random users`);
 
-    const createdSongs = [];
-
+    const createdProducts = [];
     const images = ['200/300', '300/200', '300/300', '500/200', '200/500'];
 
     for (let i = 0; i < 256; i++) {
-      const user = sampleUsers[Math.floor(Math.random() * users.length)];
+      const user = sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
+      this.logger.debug(`Selected user ${user.id} for product ${i + 1}`);
 
       const image = await axios.get(
         `https://picsum.photos/${images[Math.floor(Math.random() * images.length)]}`,
@@ -72,8 +77,9 @@ export class SeedService {
           responseType: 'arraybuffer',
         },
       );
+      this.logger.debug(`Fetched image for product ${i + 1}`);
 
-      const song = await this.productService.create(
+      const product = await this.productService.create(
         {
           category: faker.commerce.productMaterial(),
           description: faker.commerce.productDescription(),
@@ -87,10 +93,13 @@ export class SeedService {
           originalname: 'default.jpg',
         } as Express.Multer.File,
       );
-      createdSongs.push(song);
+      this.logger.debug(`Created product ${product.id}`);
+
+      createdProducts.push(product);
     }
 
-    return createdSongs;
+    this.logger.debug('Product seeding process completed');
+    return createdProducts;
   }
 
   public async seedOrders() {
