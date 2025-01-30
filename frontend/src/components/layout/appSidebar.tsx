@@ -1,6 +1,10 @@
 'use client';
+import { LoginInfo } from '@frontend/components/auth/Login';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import Link from 'next/link';
+import { SearchProducts } from '../product/SearchProducts';
 import {
   Sidebar,
   SidebarContent,
@@ -8,16 +12,6 @@ import {
   SidebarGroup,
   SidebarHeader,
 } from '../ui/sidebar';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { LoginInfo } from '@frontend/components/auth/Login';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import { SearchProducts } from '../product/SearchProducts';
-import { useRouter } from 'next/navigation';
-import { Button } from '../ui/button';
-interface HeaderProps {
-  isLogin?: boolean;
-}
-
 export const AppSidebar = () => {
   return (
     <Sidebar className='bg-zinc-900 text-white w-64 min-h-screen shadow-lg'>
@@ -25,7 +19,7 @@ export const AppSidebar = () => {
         <Link href='/'>
           <h2 className='text-lg font-semibold tracking-wide'>
             <AttachMoneyIcon className='w-5 h-5' />
-            VoidCommerce
+            Commerce
           </h2>
         </Link>
       </SidebarHeader>
@@ -41,16 +35,25 @@ export const AppSidebar = () => {
       </SidebarContent>
 
       <SidebarFooter className='bg-zinc-800  text-sm p-4 flex flex-col gap-4'>
-        <div className='text-center text-gray-400'>
-          <p>&copy; {new Date().getFullYear()} All rights reserved.</p>
+        <div className=' text-gray-400'>
+          <p>&copy; {new Date().getFullYear()} Commerce</p>
+          <p>Created by Nicolas Vycas Nery</p>
           <p>
-            Created by{' '}
             <Link
               href='https://www.linkedin.com/in/nicolas-vycas/'
               className='text-blue-400 hover:underline'
             >
               <LinkedInIcon />
-              Nicolas Vycas Nery
+              LinkedIn
+            </Link>
+          </p>
+          <p>
+            <Link
+              href='https://github.com/tomast1337'
+              className='text-blue-400 hover:underline'
+            >
+              <GitHubIcon />
+              GitHub
             </Link>
           </p>
         </div>

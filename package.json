@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "dev:web": "pnpm run --filter ./frontend dev",
-        "dev:server": "pnpm run --filter ./backend start:dev"
+        "dev:server": "pnpm run --filter ./backend start:dev",
+        "lint": "pnpm run --filter ./frontend lint && pnpm run --filter ./backend lint"
     },
     "keywords": [],
     "author": "",
