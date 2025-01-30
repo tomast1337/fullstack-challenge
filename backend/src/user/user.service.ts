@@ -133,7 +133,7 @@ export class UserService {
       data: {
         email: destination,
         name: destination.split('@')[0],
-        picture: 'https://example.com/picture.jpg',
+        picture: '/img/default-pfp.png',
       },
     });
     return user;
