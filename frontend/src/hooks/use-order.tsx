@@ -22,6 +22,10 @@ const fetchAddToOrder = async (productId: number, quantity: number) => {
   });
 };
 
+const fetchRemoveFromOrder = async (productId: number) => {
+  await ClientAxios.delete(`/orders/my/order-items/${productId}`);
+};
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const fetchMyOrders = async ({
   limit,
@@ -47,6 +51,7 @@ type UseOrders = {
   completeOrder: VoidFunction;
   cancelOrder: VoidFunction;
   addToOrder: (productId: number, quantity: number) => Promise<void>;
+  removeFormOrder: (productId: number) => Promise<void>;
   order: OrderDto | null;
 };
 
@@ -69,11 +74,17 @@ export const useOrder = create<UseOrders>((set) => {
     await fetchOrder();
   };
 
+  const removeFormOrder = async (productId: number) => {
+    await fetchRemoveFromOrder(productId);
+    await fetchOrder();
+  };
+
   return {
     fetchOrder,
     completeOrder,
     cancelOrder,
     addToOrder,
+    removeFormOrder,
     order: null,
   };
 });

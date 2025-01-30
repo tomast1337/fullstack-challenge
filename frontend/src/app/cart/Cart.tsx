@@ -19,11 +19,12 @@ import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 export const Cart = () => {
   const { toast } = useToast();
-  const { order, fetchOrder, completeOrder, cancelOrder } = useOrder(
-    useShallow((state) => ({
-      ...state,
-    })),
-  );
+  const { order, fetchOrder, removeFormOrder, completeOrder, cancelOrder } =
+    useOrder(
+      useShallow((state) => ({
+        ...state,
+      })),
+    );
 
   useEffect(() => {
     fetchOrder();
@@ -121,11 +122,7 @@ export const Cart = () => {
                       <TableCell>{quantity}</TableCell>
                       <TableCell>{`$ ${(price * quantity).toFixed(2)}`}</TableCell>
                       <TableCell>
-                        <Button
-                          onClick={() => {
-                            console.log('remove');
-                          }}
-                        >
+                        <Button onClick={() => removeFormOrder(productId)}>
                           <DeleteIcon />
                           Remove
                         </Button>
