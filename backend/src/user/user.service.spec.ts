@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { PrismaService } from '@server/prisma/prisma.service';
 import { FileService } from '@server/file/file.service';
+import { OrdersService } from '@server/orders/orders.service';
 
 describe('UserService', () => {
   let service: UserService;
@@ -16,6 +17,10 @@ describe('UserService', () => {
         },
         {
           provide: FileService,
+          useValue: {},
+        },
+        {
+          provide: OrdersService,
           useValue: {},
         },
       ],

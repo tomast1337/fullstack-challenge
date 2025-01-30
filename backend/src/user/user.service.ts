@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { PagingDto } from '@server/dto/paging.dto';
-import { PrismaService } from '@server/prisma/prisma.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { FileService } from '@server/file/file.service';
 import { PageDto } from '@server/dto/page.dto';
+import { PagingDto } from '@server/dto/paging.dto';
+import { FileService } from '@server/file/file.service';
+import { PrismaService } from '@server/prisma/prisma.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDto } from './dto/user.dto';
+import { OrdersService } from '@server/orders/orders.service';
 
 @Injectable()
 export class UserService {
@@ -16,12 +16,9 @@ export class UserService {
 
     @Inject(FileService)
     private readonly fileService: FileService,
+    @Inject(OrdersService)
+    private readonly ordersService: OrdersService,
   ) {}
-  public async create(createUserDto: CreateUserDto) {
-    return await this.prismaService.user.create({
-      data: createUserDto,
-    });
-  }
 
   public async findPage({
     page,
@@ -136,6 +133,15 @@ export class UserService {
         picture: '/img/default-pfp.png',
       },
     });
+
+    this.ordersService.createNew(
+      {
+        orderItems: [],
+        status: 'PENDING',
+      },
+      user,
+    );
+
     return user;
   }
 
