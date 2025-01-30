@@ -1,0 +1,17 @@
+{
+    "folders": [
+        {
+            "path": ".",
+            "name": "Project Root"
+        },
+        {
+            "path": "./backend",
+            "name": "Backend NestJS"
+        },
+        {
+            "path": "./frontend",
+            "name": "Frontend NextJS"
+        }
+    ],
+    "settings": {}
+}
