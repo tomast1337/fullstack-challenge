@@ -3,7 +3,6 @@
 import { Button } from '@frontend/components/ui/button';
 import { Input } from '@frontend/components/ui/input';
 import SearchIcon from '@mui/icons-material/Search';
-import { Label } from '@radix-ui/react-label';
 import { useForm } from 'react-hook-form';
 import * as zod from 'zod';
 
@@ -35,7 +34,6 @@ export const SearchProducts = () => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4'>
-        <Label>Search for Products</Label>
         {errors.name ? (
           <p className='text-red-500'>Name is required</p>
         ) : (

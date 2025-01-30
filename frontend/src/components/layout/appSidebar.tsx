@@ -8,10 +8,12 @@ import {
   SidebarGroup,
   SidebarHeader,
 } from '../ui/sidebar';
-
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { LoginInfo } from '@frontend/components/auth/Login';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { SearchProducts } from '../product/SearchProducts';
+import { useRouter } from 'next/navigation';
+import { Button } from '../ui/button';
 interface HeaderProps {
   isLogin?: boolean;
 }
