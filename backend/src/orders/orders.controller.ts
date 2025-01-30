@@ -1,37 +1,54 @@
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-  Query,
   HttpException,
   HttpStatus,
+  Patch,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
-import { OrdersService } from './orders.service';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { PagingDto } from '@server/dto/paging.dto';
-import { GetRequestToken } from '@server/GetRequestUser';
 import { User } from '@prisma/client';
+import { GetRequestToken } from '@server/GetRequestUser';
+import { PagingDto } from '@server/dto/paging.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrdersService } from './orders.service';
+import { AddToOrderDto } from './dto/add-to-order.dto';
 
 @Controller('orders')
 @ApiTags('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @Post()
+  @Get('my')
   @UseGuards(AuthGuard('jwt-refresh'))
   @ApiBearerAuth()
-  @ApiOperation({})
-  create(
+  @ApiOperation({
+    description: "Get the user's current order",
+  })
+  findMyCurrentOrder(@GetRequestToken() user: User | null) {
+    if (!user)
+      throw new HttpException(
+        {
+          message: 'Unauthorized',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+
+    return this.ordersService.findMyCurrentOrder(user);
+  }
+
+  @Patch('my')
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @ApiBearerAuth()
+  @ApiOperation({
+    description: "Update the user's current order",
+  })
+  updateMyOrder(
     @GetRequestToken() user: User | null,
-    @Body() createOrderDto: CreateOrderDto,
+    @Body() updateOrderDto: UpdateOrderDto,
   ) {
     if (!user)
       throw new HttpException(
@@ -40,13 +57,35 @@ export class OrdersController {
         },
         HttpStatus.UNAUTHORIZED,
       );
-    return this.ordersService.create(createOrderDto, user);
+    return this.ordersService.updateMyOrder(updateOrderDto, user);
+  }
+
+  @Patch('my/order-items')
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @ApiBearerAuth()
+  @ApiOperation({
+    description: "Add a product to the user's current order",
+  })
+  addToMyOrder(
+    @GetRequestToken() user: User | null,
+    @Body() createOrderDto: AddToOrderDto,
+  ) {
+    if (!user)
+      throw new HttpException(
+        {
+          message: 'Unauthorized',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    return this.ordersService.addToMyOrder(createOrderDto, user);
   }
 
   @Get()
   @UseGuards(AuthGuard('jwt-refresh'))
   @ApiBearerAuth()
-  @ApiOperation({})
+  @ApiOperation({
+    description: 'Get all orders for the user',
+  })
   findAll(@GetRequestToken() user: User | null, @Query() query: PagingDto) {
     if (!user)
       throw new HttpException(
@@ -57,47 +96,5 @@ export class OrdersController {
       );
 
     return this.ordersService.findAll(user, query);
-  }
-
-  @Get(':id')
-  @UseGuards(AuthGuard('jwt-refresh'))
-  @ApiBearerAuth()
-  @ApiOperation({})
-  findOne(@GetRequestToken() user: User | null, @Param('id') id: string) {
-    return this.ordersService.findOne(+id, user);
-  }
-
-  @Patch(':id')
-  @UseGuards(AuthGuard('jwt-refresh'))
-  @ApiBearerAuth()
-  @ApiOperation({})
-  update(
-    @GetRequestToken() user: User | null,
-    @Param('id') id: string,
-    @Body() updateOrderDto: UpdateOrderDto,
-  ) {
-    if (!user)
-      throw new HttpException(
-        {
-          message: 'Unauthorized',
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
-    return this.ordersService.update(+id, updateOrderDto, user);
-  }
-
-  @Delete(':id')
-  @UseGuards(AuthGuard('jwt-refresh'))
-  @ApiBearerAuth()
-  @ApiOperation({})
-  remove(@GetRequestToken() user: User | null, @Param('id') id: string) {
-    if (!user)
-      throw new HttpException(
-        {
-          message: 'Unauthorized',
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
-    return this.ordersService.remove(+id, user);
   }
 }

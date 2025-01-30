@@ -4,6 +4,8 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { User } from '@prisma/client';
 import { PagingDto } from '@server/dto/paging.dto';
 import { PrismaService } from '@server/prisma/prisma.service';
+import { AddToOrderDto } from './dto/add-to-order.dto';
+import { OrderDto } from './dto/order.dto';
 
 @Injectable()
 export class OrdersService {
@@ -11,10 +13,14 @@ export class OrdersService {
     @Inject(PrismaService)
     private prismaService: PrismaService,
   ) {}
-  public async create(createOrderDto: CreateOrderDto, user: User) {
+  public async createNew(
+    createOrderDto: CreateOrderDto,
+    user: User,
+  ): Promise<OrderDto> {
     const { orderItems } = createOrderDto;
     const order = await this.prismaService.order.create({
       data: {
+        status: 'PENDING',
         orderItems: {
           create: orderItems.map((item) => ({
             product: {
@@ -33,7 +39,7 @@ export class OrdersService {
       },
     });
 
-    return order;
+    return OrderDto.fromEntity(order, []);
   }
 
   public async findAll(user: User, { limit, page, order }: PagingDto) {
@@ -50,24 +56,47 @@ export class OrdersService {
 
     return orders;
   }
-
-  public async findOne(id: number, user: User) {
-    const order = await this.prismaService.order.findFirst({
-      where: {
-        id,
-        userId: user.id,
-      },
-    });
-
-    return order;
+  public async findMyCurrentOrder(user: User): Promise<OrderDto> {
+    try {
+      const order = await this.prismaService.order.findFirst({
+        where: {
+          userId: user.id,
+          status: 'PENDING',
+        },
+        include: {
+          orderItems: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      });
+      return OrderDto.fromEntity(
+        order,
+        order.orderItems.map((item) => ({
+          productId: item.product.id,
+          quantity: item.quantity,
+          price: item.product.price,
+          name: item.product.name,
+        })),
+      );
+    } catch {
+      // no order found: create a new one
+      const order = await this.createNew(
+        {
+          orderItems: [],
+          status: 'PENDING',
+        },
+        user,
+      );
+      return order;
+    }
   }
 
-  public async update(id: number, updateOrderDto: UpdateOrderDto, user: User) {
-    const { orderItems } = updateOrderDto;
+  public async updateMyOrder(updateOrderDto: UpdateOrderDto, user: User) {
     // if order status is COMPLETED or CANCELED, return an error
     const order = await this.prismaService.order.findFirst({
       where: {
-        id,
         userId: user.id,
         status: {
           notIn: ['COMPLETED', 'CANCELED'],
@@ -84,33 +113,59 @@ export class OrdersService {
       );
     }
 
+    const { status } = updateOrderDto;
+
     const updatedOrder = await this.prismaService.order.update({
       where: {
-        id,
+        id: order.id,
       },
       data: {
-        orderItems: {
-          create: orderItems.map((item) => ({
-            product: {
-              connect: {
-                id: item.productId,
-              },
-            },
-            quantity: item.quantity,
-          })),
-        },
+        status,
       },
     });
+
+    if (status === 'COMPLETED') {
+      // create a new order
+      await this.createNew(
+        {
+          orderItems: [],
+          status: 'PENDING',
+        },
+        user,
+      );
+
+      // remove from all products the quantity ordered
+      const orderItems = await this.prismaService.orderItem.findMany({
+        where: {
+          orderId: order.id,
+        },
+      });
+
+      for (const orderItem of orderItems) {
+        await this.prismaService.product.update({
+          where: {
+            id: orderItem.productId,
+          },
+          data: {
+            stockQuantity: {
+              decrement: orderItem.quantity,
+            },
+          },
+        });
+      }
+    }
 
     return updatedOrder;
   }
 
-  public async remove(id: number, user: User) {
-    // only allow deletion of orders with status PENDING
+  public async addToMyOrder(
+    { id: productId, quantity }: AddToOrderDto,
+    user: User,
+  ) {
     const order = await this.prismaService.order.findFirst({
       where: {
-        id,
         userId: user.id,
+        status: 'PENDING',
       },
     });
 
@@ -123,21 +178,50 @@ export class OrdersService {
       );
     }
 
-    if (order.status !== 'PENDING') {
+    // verify if the product exists
+
+    const product = await this.prismaService.product.findUnique({
+      where: {
+        id: productId,
+      },
+    });
+
+    if (!product) {
       throw new HttpException(
         {
-          message: 'Order cannot be deleted',
+          message: 'Product not found',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    // verify if the there is enough stock
+    if (product.stockQuantity < quantity) {
+      throw new HttpException(
+        {
+          message: 'Not enough stock',
         },
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const deletedOrder = await this.prismaService.order.delete({
-      where: {
-        id,
+    // create the order item
+    await this.prismaService.orderItem.create({
+      data: {
+        orderId: order.id,
+        productId,
+        quantity,
       },
     });
 
-    return deletedOrder;
+    // return the updated order
+    const updatedOrder = await this.prismaService.order.findFirst({
+      where: {
+        userId: user.id,
+        status: 'PENDING',
+      },
+    });
+
+    return updatedOrder;
   }
 }

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsInt } from 'class-validator';
+import { OrderStatus } from '@prisma/client';
+import { IsArray, IsEnum, IsInt } from 'class-validator';
 
 export class CreateOrderItemDto {
   @IsInt()
@@ -32,4 +33,11 @@ export class CreateOrderDto {
     ],
   })
   orderItems: CreateOrderItemDto[];
+
+  @IsEnum(OrderStatus)
+  @ApiProperty({
+    description: 'The status of the order',
+    example: 'PENDING',
+  })
+  status: OrderStatus;
 }
