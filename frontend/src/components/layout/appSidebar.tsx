@@ -1,7 +1,5 @@
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import Link from 'next/link';
-import { LoginForm } from '../LoginForm';
-import { UserInfo } from '../UserInfo';
 import {
   Sidebar,
   SidebarContent,
@@ -10,13 +8,14 @@ import {
   SidebarHeader,
 } from '../ui/sidebar';
 
+import { LoginInfo } from '@frontend/components/auth/Login';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { SearchProducts } from '../product/SearchProducts';
 interface HeaderProps {
   isLogin?: boolean;
 }
 
-export const AppSidebar = ({ isLogin = false }: HeaderProps) => {
+export const AppSidebar = () => {
   return (
     <Sidebar className='bg-zinc-900 text-white w-64 min-h-screen shadow-lg'>
       <SidebarHeader className='bg-zinc-800 px-6 py-4 flex items-center justify-center'>
@@ -34,17 +33,7 @@ export const AppSidebar = ({ isLogin = false }: HeaderProps) => {
         </SidebarGroup>
         <div className='flex-grow' />
         <SidebarGroup className='flex flex-col gap-3'>
-          {isLogin ? (
-            <UserInfo
-              user={{
-                name: 'Nicolas Vycas Nery',
-                email: 'vycasnicolas@gmail.com',
-                picture: 'https://avatars.githubusercontent.com/u/18103315?v=4',
-              }}
-            />
-          ) : (
-            <LoginForm />
-          )}
+          <LoginInfo />
         </SidebarGroup>
       </SidebarContent>
 

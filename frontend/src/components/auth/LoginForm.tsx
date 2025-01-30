@@ -1,6 +1,6 @@
 'use client';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
+import { Input } from '@frontend/components/ui/input';
+import { Button } from '@frontend/components/ui/button';
 import { Label } from '@radix-ui/react-label';
 import LoginIcon from '@mui/icons-material/Login';
 import { requestMagicLink } from '@frontend/hooks/use-auth';
