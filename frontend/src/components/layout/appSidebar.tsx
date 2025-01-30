@@ -1,3 +1,4 @@
+'use client';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import Link from 'next/link';
 import {
