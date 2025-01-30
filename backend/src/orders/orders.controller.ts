@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
+  Param,
   Patch,
   Query,
   UseGuards,
@@ -13,9 +15,9 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { GetRequestToken } from '@server/GetRequestUser';
 import { PagingDto } from '@server/dto/paging.dto';
+import { AddToOrderDto } from './dto/add-to-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrdersService } from './orders.service';
-import { AddToOrderDto } from './dto/add-to-order.dto';
 
 @Controller('orders')
 @ApiTags('orders')
@@ -78,6 +80,26 @@ export class OrdersController {
         HttpStatus.UNAUTHORIZED,
       );
     return this.ordersService.addToMyOrder(createOrderDto, user);
+  }
+
+  @Delete('my/order-items/:productId')
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @ApiBearerAuth()
+  @ApiOperation({
+    description: "Add a product to the user's current order",
+  })
+  deleteFromMyOrder(
+    @GetRequestToken() user: User | null,
+    @Param('productId') productId: string,
+  ) {
+    if (!user)
+      throw new HttpException(
+        {
+          message: 'Unauthorized',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    return this.ordersService.deleteFromMyOrder(+productId, user);
   }
 
   @Get()

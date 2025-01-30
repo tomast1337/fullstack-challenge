@@ -247,4 +247,36 @@ export class OrdersService {
 
     return updatedOrder;
   }
+
+  public async deleteFromMyOrder(productId: number, user: User) {
+    const order = await this.prismaService.order.findFirst({
+      where: {
+        userId: user.id,
+        status: 'PENDING',
+      },
+    });
+
+    if (!order) {
+      throw new HttpException(
+        {
+          message: 'Order not found',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    await this.prismaService.orderItem.deleteMany({
+      where: {
+        orderId: order.id,
+        productId,
+      },
+    });
+
+    return this.prismaService.order.findFirst({
+      where: {
+        userId: user.id,
+        status: 'PENDING',
+      },
+    });
+  }
 }
