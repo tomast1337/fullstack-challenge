@@ -83,6 +83,7 @@ export class ProductService {
       where: {
         name: {
           contains: query,
+          mode: 'insensitive',
         },
       },
       take: limit,
