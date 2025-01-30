@@ -26,9 +26,9 @@ export class AuthController {
 
   @Throttle({
     default: {
-      // one every 1 hour
-      ttl: 60 * 60 * 1000,
-      limit: 1,
+      // 10 every 60 seconds
+      ttl: 60,
+      limit: 10,
     },
   })
   @Post('login/magic-link')
