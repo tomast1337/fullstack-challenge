@@ -5,6 +5,7 @@ export class ProductDto {
   name: string;
   description: string;
   price: number;
+  stockQuantity: number;
   picture: string;
   createdAt: Date;
   updatedAt: Date;
@@ -17,6 +18,7 @@ export class ProductDto {
       picture: product.picture,
       createdAt: product.createdAt,
       updatedAt: product.updatedAt,
+      stockQuantity: product.stockQuantity,
     };
   }
 }
