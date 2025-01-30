@@ -5,13 +5,12 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { User } from '@prisma/client';
-import { PagingDto } from '@server/dto/paging.dto';
 import { PrismaService } from '@server/prisma/prisma.service';
 import { AddToOrderDto } from './dto/add-to-order.dto';
+import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderDto } from './dto/order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
 
 @Injectable()
 export class OrdersService {
@@ -49,19 +48,33 @@ export class OrdersService {
     return OrderDto.fromEntity(order, []);
   }
 
-  public async findAll(user: User, { limit, page, order }: PagingDto) {
+  public async findAll(user: User) {
     const orders = await this.prismaService.order.findMany({
       where: {
         userId: user.id,
       },
-      take: limit,
-      skip: limit * (page - 1),
+      include: {
+        orderItems: {
+          include: {
+            product: true,
+          },
+        },
+      },
       orderBy: {
-        createdAt: order ? 'asc' : 'desc',
+        createdAt: 'desc',
       },
     });
 
-    return orders;
+    return orders.map((order) =>
+      OrderDto.fromEntity(order, [
+        ...order.orderItems.map((item) => ({
+          productId: item.product.id,
+          quantity: item.quantity,
+          price: item.product.price,
+          name: item.product.name,
+        })),
+      ]),
+    );
   }
   public async findMyCurrentOrder(user: User): Promise<OrderDto> {
     try {

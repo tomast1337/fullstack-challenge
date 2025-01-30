@@ -7,14 +7,12 @@ import {
   HttpStatus,
   Param,
   Patch,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { GetRequestToken } from '@server/GetRequestUser';
-import { PagingDto } from '@server/dto/paging.dto';
 import { AddToOrderDto } from './dto/add-to-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrdersService } from './orders.service';
@@ -106,9 +104,9 @@ export class OrdersController {
   @UseGuards(AuthGuard('jwt-refresh'))
   @ApiBearerAuth()
   @ApiOperation({
-    description: 'Get all orders for the user',
+    description: 'Get all orders from the user',
   })
-  findAll(@GetRequestToken() user: User | null, @Query() query: PagingDto) {
+  findAll(@GetRequestToken() user: User | null) {
     if (!user)
       throw new HttpException(
         {
@@ -117,6 +115,6 @@ export class OrdersController {
         HttpStatus.UNAUTHORIZED,
       );
 
-    return this.ordersService.findAll(user, query);
+    return this.ordersService.findAll(user);
   }
 }
