@@ -51,11 +51,10 @@ model Order {
 }
 
 model OrderItem {
-    id         Int   @id @default(autoincrement())
-    orderId    Int
-    productId  Int
-    quantity   Int
-    totalPrice Float @default(0.0)
+    id        Int @id @default(autoincrement())
+    orderId   Int
+    productId Int
+    quantity  Int
 
     product Product @relation(fields: [productId], references: [id])
     order   Order   @relation(fields: [orderId], references: [id])
