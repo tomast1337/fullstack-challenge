@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
@@ -16,6 +16,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { validate } from './config/EnvironmentVariables';
 import { FileModule } from './file/file.module';
 import { SeedModule } from './seed/seed.module';
+import { LoggerMiddleware } from './LoggerMiddleware';
 
 @Module({
   imports: [
@@ -75,6 +76,9 @@ import { SeedModule } from './seed/seed.module';
     },
   ],
 })
-export class AppModule {
-  static readonly logger = new Logger(AppModule.name);
+export class AppModule implements NestModule {
+  static logger = new Logger(AppModule.name);
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*'); // Apply to all routes
+  }
 }
