@@ -25,12 +25,18 @@ export const ProductSugesstion = () => {
       <CarouselContent>
         {loading
           ? [...Array(size)].map((_, index) => (
-              <CarouselItem className='basis-1/3' key={index}>
+              <CarouselItem
+                className='basis-full sm:basis-1/2 md:basis-1/3'
+                key={index}
+              >
                 <ProductCardSkeleton key={index} />
               </CarouselItem>
             ))
           : products.map((product) => (
-              <CarouselItem className='basis-1/3' key={product.id}>
+              <CarouselItem
+                className='basis-full sm:basis-1/2 md:basis-1/3 min-h-[500px] max-h-[500px]'
+                key={product.id}
+              >
                 <ProductCard product={product} />
               </CarouselItem>
             ))}

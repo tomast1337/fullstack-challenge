@@ -57,7 +57,7 @@ export const ProductCard = ({ product }: { product: ProductDto }) => {
     router.push(`/product/${product.id}`);
   };
   return (
-    <Card className='w-[300px] max-w-sm'>
+    <Card className='w-[300px] max-w-sm h-[500px] flex flex-col'>
       {/* Card Header: Product Image and Name */}
       <CardHeader>
         <Image
@@ -76,15 +76,25 @@ export const ProductCard = ({ product }: { product: ProductDto }) => {
         <p className='text-lg font-semibold'>${price.toFixed(2)}</p>
       </CardContent>
 
+      <span className='flex-grow' />
       {/* Card Footer: See Product Button */}
       <CardFooter>
-        <Button
-          onClick={onProductClick}
-          className='w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors'
-        >
-          <InfoIcon className='mr-2' />
-          See Product
-        </Button>
+        {product.stockQuantity > 0 ? (
+          <Button
+            onClick={onProductClick}
+            className='w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors'
+          >
+            <InfoIcon className='mr-2' />
+            See Product
+          </Button>
+        ) : (
+          <Button
+            className='w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors'
+            disabled
+          >
+            Out of Stock
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );
