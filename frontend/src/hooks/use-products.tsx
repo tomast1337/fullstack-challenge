@@ -1,7 +1,7 @@
-import { create } from 'zustand';
-import ClientAxios from '@frontend/lib/axios/clientAxios';
-import { ProductDto } from '@backend/product/dto/product.dto';
 import { PageDto } from '@backend/dto/page.dto';
+import { ProductDto } from '@backend/product/dto/product.dto';
+import ClientAxios from '@frontend/lib/axios/clientAxios';
+import { create } from 'zustand';
 
 export type UseProducts = {
   products: null | Array<ProductDto>;
