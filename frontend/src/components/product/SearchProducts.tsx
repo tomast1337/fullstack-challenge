@@ -6,11 +6,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useForm } from 'react-hook-form';
 import * as zod from 'zod';
 
-const validation = zod.object({
+const productSearchValidation = zod.object({
   name: zod.string().nonempty(),
 });
 
-type searchFromType = zod.infer<typeof validation>;
+type searchFromType = zod.infer<typeof productSearchValidation>;
 
 export const SearchProducts = () => {
   const {
