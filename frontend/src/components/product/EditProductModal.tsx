@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from '@frontend/components/ui/dialog';
 import { useToast } from '@frontend/hooks/use-toast';
-import { ProductForm, ProductSchemaType } from './ProductSchemaType';
+import { ProductForm, ProductSchemaType } from './ProductForm';
 
 export const EditProductModal = ({
   onEdit,

@@ -18,7 +18,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { Button } from '../ui/button';
 import { AddProductModal } from './AddProductModal';
 import { EditProductModal } from './EditProductModal';
-import { ProductSchemaType } from './ProductSchemaType';
+import { ProductSchemaType } from './ProductForm';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@frontend/hooks/use-toast';
 
