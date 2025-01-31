@@ -9,14 +9,14 @@ import * as zod from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@frontend/hooks/use-toast';
 
-const validationSchema = zod.object({
+const loginFormValidationSchema = zod.object({
   email: zod
     .string()
     .email('Invalid email address')
     .nonempty('Email is required'),
 });
 
-type LoginFormType = zod.infer<typeof validationSchema>;
+type LoginFormType = zod.infer<typeof loginFormValidationSchema>;
 
 export const LoginForm = () => {
   const { toast } = useToast();
@@ -26,7 +26,7 @@ export const LoginForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormType>({
-    resolver: zodResolver(validationSchema),
+    resolver: zodResolver(loginFormValidationSchema),
   });
 
   const onSubmit = async (data: LoginFormType) => {
