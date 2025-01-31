@@ -1,10 +1,6 @@
-Here’s an improved version of your README. It’s more structured, concise, and user-friendly, with clear sections and better formatting:
-
----
-
 # Fullstack Challenge
 
-This project is a fullstack application built with a modern tech stack. It uses Docker for containerization, PostgreSQL for the database, MinIO for S3 storage, and a combination of backend and frontend services.
+This project is a fullstack application built with a modern tech stack. It uses Docker for containerization, PostgreSQL for the database, MinIO for S3 storage, and a combination of backend and frontend services. The application features passwordless authentication using magic links and JWT for secure user sessions.
 
 ---
 
@@ -128,6 +124,24 @@ pnpm install
 
 ---
 
+## Key Features
+
+### Authentication
+- The application uses **passwordless authentication** with magic links.
+- Users can log in or create an account by entering their email in the sidebar form.
+- A verification link is sent to the provided email address.
+- If using the `maildev` container, you can view sent emails at [http://localhost:1080](http://localhost:1080).
+
+### Database Seeding
+- You can insert mocked data into the development database using the Swagger documentation routes.
+  ![Swagger Routes](https://github.com/user-attachments/assets/de555180-5dc0-439f-85e7-78286a773f0b)
+
+### Frontend Login Form
+- The frontend includes a sidebar form for email-based login or account creation.
+  ![Login Form](https://github.com/user-attachments/assets/5ed19687-e9d4-43e3-8088-dab6374563df)
+
+---
+
 ## Running Tests
 
 To run tests for both the backend and frontend, use the following command in their respective folders:
@@ -142,6 +156,7 @@ pnpm test
 
 - **Backend**: Handles API requests, database interactions, and authentication.
 - **Frontend**: A Next.js application for the user interface.
+- **Docker**: Contains configurations for containerized services.
 
 ---
 
