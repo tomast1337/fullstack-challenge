@@ -7,8 +7,10 @@ export class ProductDto {
   price: number;
   stockQuantity: number;
   picture: string;
+  category: string;
   createdAt: Date;
   updatedAt: Date;
+
   static fromEntity(product: Product): ProductDto {
     return {
       id: product.id,
@@ -19,6 +21,7 @@ export class ProductDto {
       createdAt: product.createdAt,
       updatedAt: product.updatedAt,
       stockQuantity: product.stockQuantity,
+      category: product.category,
     };
   }
 }
