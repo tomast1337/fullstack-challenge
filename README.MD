@@ -142,7 +142,6 @@ pnpm test
 
 - **Backend**: Handles API requests, database interactions, and authentication.
 - **Frontend**: A Next.js application for the user interface.
-- **Docker**: Contains configurations for containerized services.
 
 ---
 
