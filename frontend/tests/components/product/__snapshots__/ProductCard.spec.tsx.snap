@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ProductCard> renders correctly and matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="rounded-lg border border-neutral-200 bg-white text-neutral-950 shadow-sm dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-50 w-[300px] max-w-sm h-[500px] flex flex-col"
+  >
+    <div
+      class="flex flex-col space-y-1.5 p-6"
+    >
+      <img
+        alt="Test Product"
+        class="w-full h-48 object-cover rounded-t-lg"
+        data-nimg="1"
+        decoding="async"
+        height="200"
+        loading="lazy"
+        src="/_next/image?url=https%3A%2F%2Fvia.placeholder.com%2F300&w=640&q=75"
+        srcset="/_next/image?url=https%3A%2F%2Fvia.placeholder.com%2F300&w=384&q=75 1x, /_next/image?url=https%3A%2F%2Fvia.placeholder.com%2F300&w=640&q=75 2x"
+        style="color: transparent;"
+        width="300"
+      />
+      <div
+        class="text-2xl font-semibold leading-none tracking-tight mt-4"
+      >
+        Test Product
+      </div>
+      <div
+        class="text-sm text-neutral-500 dark:text-neutral-400"
+      >
+        This is a test product
+      </div>
+    </div>
+    <div
+      class="p-6 pt-0"
+    >
+      <p
+        class="text-lg font-semibold"
+      >
+        $99.99
+      </p>
+    </div>
+    <span
+      class="flex-grow"
+    />
+    <div
+      class="flex items-center p-6 pt-0"
+    >
+      <button
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 dark:ring-offset-neutral-950 dark:focus-visible:ring-neutral-300 dark:bg-neutral-50 dark:text-neutral-900 dark:hover:bg-neutral-50/90 h-10 w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mr-2 css-1umw9bq-MuiSvgIcon-root"
+          data-testid="InfoIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 15h-2v-6h2zm0-8h-2V7h2z"
+          />
+        </svg>
+        See Product
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
